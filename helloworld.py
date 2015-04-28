@@ -2,9 +2,9 @@ from L3GD20 import L3GD20
 from LSM303 import Adafruit_LSM303
 from kalmanfilter import KalmanFilterLinear
 import time
-import os
 import math
 import numpy
+import os
 
 def getAngleGyro(gyro, gyro_dxyz, dt):
 	gyro[0] = gyro_dxyz[0] * dt
@@ -48,28 +48,30 @@ dt = 0.02
 gyro = [0, 0, 0]
 current_angle = [0, 0, 0]
 
-A = numpy.eye(3)
-H = numpy.eye(3)
-B = numpy.eye(3)*0
-Q = numpy.eye(3)*0.001
+A = numpy.eye(1)
+H = numpy.eye(1)
+B = numpy.eye(1)*0
+Q = numpy.eye(1)*0.001
 #play with Q to tune the smoothness
-R = numpy.eye(3)*0.01
-xhat = numpy.matrix([[0],[0],[0]])
-P= numpy.eye(3)
+R = numpy.eye(1)*0.01
+xhat = numpy.matrix([0, 0, 0])
+P= numpy.eye(1)
 
 kf = KalmanFilterLinear(A,B,H,xhat,P,Q,R)
 
 s.Init()
 s.Calibrate()
+
 while True:	
 	gyro_dxyz = s.Get_CalOut_Value()
 	gyro = getAngleGyro(gyro, gyro_dxyz, dt)
 	acc = getAngleAcc(lsm.read())
-	acc = kf.filter(numpy.matrix([[0], [0], [0]]), numpy.matrix([ [acc[0]], [acc[1]], [acc[2]] ]))
+	acc = kf.filter(numpy.matrix([0, 0, 0]), acc)
 	current_angle = getAngleCombine(gyro, acc, current_angle, dt)
 
-	print ("{:7.2f} {:7.2f} {:7.2f}".format(gyro[0], gyro[1], gyro[2]))
-	print ("{:7.2f} {:7.2f} {:7.2f}".format(acc[0], acc[1], acc[2]))
-	print ("{:7.2f} {:7.2f} {:7.2f}".format(current_angle[0], current_angle[1], current_angle[2]))
-	time.sleep(dt)
 	os.system('clear')
+
+	print("{:7.2f} {:7.2f} {:7.2f}".format(gyro[0], gyro[1], gyro[2]))
+	print("{:7.2f} {:7.2f} {:7.2f}".format(acc[0], acc[1], acc[2]))
+	print("{:7.2f} {:7.2f} {:7.2f}".format(current_angle[0], current_angle[1], current_angle[2]))
+	time.sleep(dt)
