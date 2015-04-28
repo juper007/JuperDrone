@@ -42,4 +42,4 @@ class KalmanFilterLinear:
     # eye(n) = nxn identity matrix.
     self.current_prob_estimate = (numpy.eye(size)-kalman_gain*self.H)*predicted_prob_estimate
 
-    return self.current_state_estimate[0,0],self.current_state_estimate[1,0],self.current_state_estimate[2,0]
+    return self.current_state_estimate[0,0],self.current_state_estimate[0, 1],self.current_state_estimate[0, 2]

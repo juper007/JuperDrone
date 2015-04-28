@@ -71,7 +71,7 @@ while True:
 
 	os.system('clear')
 
-	print("{:7.2f} {:7.2f} {:7.2f}".format(a) for a in enumerate(gyro))
+	print("{:7.2f} {:7.2f} {:7.2f}".format(gyro[0], gyro[1], gyro[2]))
 	print("{:7.2f} {:7.2f} {:7.2f}".format(acc[0], acc[1], acc[2]))
 	print("{:7.2f} {:7.2f} {:7.2f}".format(current_angle[0], current_angle[1], current_angle[2]))
 	time.sleep(dt)
