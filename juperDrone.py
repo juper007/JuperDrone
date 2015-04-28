@@ -1,20 +1,20 @@
-import juperBluetooth from juperBluetooth
+from juperBluetooth import juperBluetooth
 import datetime
 
 def log(message):
-	print ("[Main] %s : %s".format(datetime.datetime.now(), message)   
+    print ("[Main] {0} : {1}".format(datetime.datetime.now(), message))
 
 if __name__ == "__main__":
-
+    log ("Start")
     # init sensor
     # init motors
     # init Bluetooth
     comm = juperBluetooth()
     comm.start()
     
-    log ("Start")
     while comm.isRunning:
         if (comm.hasCommand):
+            print ("a")
             # do Something
 
         # Check sensor
