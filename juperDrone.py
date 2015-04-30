@@ -1,4 +1,5 @@
 from juperBluetooth import juperBluetooth
+from juperMotors import juperMotors
 import datetime
 
 def log(message):
@@ -11,6 +12,8 @@ if __name__ == "__main__":
 
     # init sensor
     # init motors
+    motors = juperMotors([17, 18, 22, 23])
+
     # init Bluetooth
     comm = juperBluetooth()
     comm.start()

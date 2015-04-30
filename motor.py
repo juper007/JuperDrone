@@ -1,13 +1,14 @@
 from RPIO import PWM
 import time
 
-class motor:
+class motor(object):
     def __init__(self, pin, WMin = 0, WMax = 100):
         self.pin = pin
         self.min = WMin
         self.max = WMax
         self.PWM = PWM
         self.current_PW = 0
+        self.current_set_value = 0
 
     def start(self):
         if not self.PWM.is_setup:
@@ -29,8 +30,12 @@ class motor:
         PW = int(1000 + (value * 10))
         self.PWM.add_channel_pulse(0, self.pin, 0, PW)
 
-        self.current_PW = value
+        self.current_set_value = value
+        self.current_PW = PW
 
     def getW(self):
-        return slef.current_PW
+        return self.current_PW
+
+    def getSetValue(self):
+        return self.current_set_value
 
