@@ -8,11 +8,13 @@ def log(message):
 if __name__ == "__main__":
     log ("Start")
 
+    # init values
     timeStep = 0.02
+    motors_pin_array = [17, 18, 22, 23]
 
     # init sensor
     # init motors
-    motors = juperMotors([17, 18, 22, 23])
+    motors = juperMotors(motors_pin_array)
 
     # init Bluetooth
     comm = juperBluetooth()
@@ -23,22 +25,30 @@ if __name__ == "__main__":
             # do Something
             command = comm.command.pop(0)
             if (command[0] == "01"):
-                log(command)
                 # Move up
+                motors.moveUp(command[1])
+
             elif (command[0] == "02"):
                 # Move down
-                log(command)
+                motors.moveDown(command[1])
+
             elif (command[0] == "03"):
                 # Move left
                 log(command)
+
             elif (command[0] == "04"):
                 # Move right
                 log(command)
+
             elif (command[0] == "05"):
                 # Turn CW
-                log(command)
+                log(command)                
+
             elif (command[0] == "06"):
                 # Turn CCW
+                log(command)
+
+            else
                 log(command)
             comm.hasCommand = False
 

@@ -3,7 +3,9 @@ from motor import motor
 class juperMotors(object):
     def __init__(self, pin_array):
         self.motors = []
-        
+        self.motorCount = len(pin_array)
+        self.pins = pin_array
+
         for pin in pin_array:
             m = motor(pin)
             m.start()
@@ -15,11 +17,11 @@ class juperMotors(object):
         self.motors[index].setW(current_value + offset)
 
     def moveUp(self, offset):
-        for i in range(len(self.motors)):
+        for i in range(motorCount):
             self.setMotorW(i, offset)
 
     def moveDown(self, offset):
-        for i in range(len(self.motors)):
+        for i in range(motorCount):
             self.setMotorW(i, offset * -1)
 
     def getCurrentStatus(self):
