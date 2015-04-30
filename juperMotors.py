@@ -4,7 +4,7 @@ class juperMotors(object):
     def __init__(self, pin_array):
         self.motors = []
         
-        for pin in range(len(pin_array)):
+        for pin in pin_array:
             m = motor(pin)
             m.start()
             m.setW(0)
