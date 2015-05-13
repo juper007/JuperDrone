@@ -1,8 +1,9 @@
 import bluetooth
 import datetime
 import time
+import threading
 
-class juperBluetooth(object):
+class juperBluetooth(threading.Thread):
 
     def __init__(self):
         #bd_addr = "78:59:5E:81:2C:BC"
@@ -32,7 +33,7 @@ class juperBluetooth(object):
                 isFound = True
             time.sleep(1)
 
-    def start(self):
+    def run(self):
         self.isRunning = True
         while self.isRunning:
             try:
@@ -60,6 +61,8 @@ class juperBluetooth(object):
      #
      # Send Protocol
      # 20|X|{ AA, BB, CC, DD} : Motor Status - X motor count, AA BB CC DD Value
+     # 21|X|{ AA, BB, CC}  : Sensor Status - X Sensor count, AA BB CC Value
+     #
      ###########################################################
 
     def communicationHandle(self):
@@ -78,6 +81,12 @@ class juperBluetooth(object):
         for val in motorStatus:
             data = data + "{:0>2d}".format(val)
         self.socket.send(data)
+
+    def sendSensorStatus(self, sensorStatus):
+        data = "21"
+        for val in sensorStatus:
+            val = round(var, 2) * 100
+            data = data + "{0>5d}".format(val)
 
 
         
