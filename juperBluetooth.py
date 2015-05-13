@@ -8,7 +8,8 @@ class juperBluetooth(object):
         #bd_addr = "78:59:5E:81:2C:BC"
         self.target_addr = "B4:62:93:70:8E:F9" # S3
         self.target_uuid = "0B3C15DD-063A-4921-9BDA-103693A1E26F"
-        self.isRunning = False
+        self.isRunning = True
+        self.isConnected = False
         self.socket = None
         self.command = []
         self.hasCommand = False
@@ -19,6 +20,7 @@ class juperBluetooth(object):
     def connectBluetooth(self, target):
         socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
         socket.connect((target["host"], target["port"]))
+        self.isConnected = True
         return socket
 
     def find_service(self, serviceId, addr):
@@ -30,41 +32,52 @@ class juperBluetooth(object):
                 isFound = True
             time.sleep(1)
 
-     ###########################################################
-     # Protocol
-     #
-     # 00|00 : End Communication
-     # 01|XX : Move Up - XX set value
-     # 02|XX : Move Down - XX set value
-     # 03|XX : Move Left - XX set angle, XX = 00 stop moving
-     # 04|XX : Move Right - XX set angle, XX = 00 stop moving
-     # 05|XX : Turn CW - XX set value, XX = 00 stop turning
-     # 06|XX : Turn CCW - XX set value, XX = 00 stop turning
-     #
-     ###########################################################
-
-    def communicationHandle(self, sock):
-        data = ""
-        while data != "00":
-            data = sock.recv(1024).decode(encoding='UTF-8')
-            cmd = data[0:2]
-            val = data[2:4]
-            self.command.append([cmd, val])
-            self.hasCommand = True
-        return False
-
     def start(self):
         self.isRunning = True
         while self.isRunning:
             try:
                 self.log("Finding the service...")
                 self.socket = self.find_service(self.target_uuid, self.target_addr)
-                self.log("Found Service : " + self.socket["host"], self.socket["port"])
-                self.socket = self.connectBluetooth(socket)
+                self.log("Found Service : " + str(self.socket["host"]) + "," + str(self.socket["port"]))
+                self.socket = self.connectBluetooth(self.socket)
                 self.log("Connected to bluetooth device")
                 self.log("Waiting for data...")
-                isRunning = self.communicationHandle(socket)
+                self.isRunning = self.communicationHandle()
             except Exception as inst:
                 self.log(type(inst))
                 self.socket.close()
+
+     ###########################################################
+     # Receive Protocol
+     #
+     # 00|0|00 : End Communication
+     # 01|0|XX : Move Up - XX set value
+     # 02|0|XX : Move Down - XX set value
+     # 03|S|XX : Move Left - XX set angle, S On(1)/Off(0)
+     # 04|S|XX : Move Right - XX set angle, S On(1)/Off(0)
+     # 05|S|XX : Turn CW - XX set value, S On(1)/Off(0)
+     # 06|S|XX : Turn CCW - XX set value, S On(1)/Off(0)
+     #
+     # Send Protocol
+     # 20|X|{ AA, BB, CC, DD} : Motor Status - X motor count, AA BB CC DD Value
+     ###########################################################
+
+    def communicationHandle(self):
+        data = ""
+        while data != "00000":
+            data = self.socket.recv(1024).decode(encoding='UTF-8')
+            cmd = data[0:2]
+            swc = data[2:3]
+            val = int(data[3:5])
+            self.command.append([cmd, swc, val])
+            self.hasCommand = True
+        return False
+
+    def sendMotorStatus(self, motorStatus):
+        data = "20" + str(len(motorStatus))
+        for val in motorStatus:
+            data = data + "{:0>2d}".format(val)
+        self.socket.send(data)
+
+
         
