@@ -67,7 +67,7 @@ if __name__ == "__main__":
         sensorStatus = sensors.getCurrentAngleStatus()
 
         # Calculate PID
-        motors_correction = pid.gePID(sensorStatus, timeStep)
+        motors_correction = pid.getPID(sensorStatus, timeStep)
 
         # Update Motors
         for i in range(len(motors.motors)):
