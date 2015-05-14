@@ -6,6 +6,7 @@ import threading
 class juperBluetooth(threading.Thread):
 
     def __init__(self):
+        super(juperBluetooth, self).__init__()
         #bd_addr = "78:59:5E:81:2C:BC"
         self.target_addr = "B4:62:93:70:8E:F9" # S3
         self.target_uuid = "0B3C15DD-063A-4921-9BDA-103693A1E26F"
@@ -85,8 +86,8 @@ class juperBluetooth(threading.Thread):
     def sendSensorStatus(self, sensorStatus):
         data = "21"
         for val in sensorStatus:
-            val = round(var, 2) * 100
-            data = data + "{0>5d}".format(val)
+            val = round(val, 2) * 100
+            data = data + "{:0>5d}".format(int(val))
 
 
         

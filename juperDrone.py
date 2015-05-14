@@ -49,6 +49,7 @@ if __name__ == "__main__":
 
     # init sensor
     sensors = juperSensor()
+    sensors.start()
     # init motors
     motors = juperMotors(motors_pin_array)
 
@@ -60,7 +61,7 @@ if __name__ == "__main__":
         doBluetoothCommand(comm)
 
         # Get sensor value
-        sensorStatus = sensor.getCurrentStatus()
+        sensorStatus = sensors.getCurrentAngleStatus()
 
         # Calculate PID
         # Update Motors

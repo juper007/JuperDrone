@@ -10,6 +10,7 @@ import threading
 class juperSensor(threading.Thread):
 
     def __init__ (self):
+        super(juperSensor, self).__init__()
         self.GyroSensor = L3GD20(busId = 1, slaveAddr = 0x6b, ifLog = False, ifWriteBlock=False)
         self.AccSensor = Adafruit_LSM303()
 
@@ -41,10 +42,10 @@ class juperSensor(threading.Thread):
     def run(self):
         while True: 
             gyro_dxyz = self.GyroSensor.Get_CalOut_Value()
-            self.gyroStatus = getAngleGyro(gyro_dxyz)
-            self.accStatus = getAngleAcc(self.AccSensor.read())
-            self.accStatus = kf.filter(numpy.matrix([0, 0, 0]), self.accStatus)
-            self.current_angle = getAngleCombine()
+            self.gyroStatus = self.getAngleGyro(gyro_dxyz)
+            self.accStatus = self.getAngleAcc(self.AccSensor.read())
+            self.accStatus = self.kf.filter(numpy.matrix([0, 0, 0]), self.accStatus)
+            self.current_angle = self.getAngleCombine()
 
             time.sleep(self.DelayTime)
 
@@ -69,9 +70,9 @@ class juperSensor(threading.Thread):
         result = [0,0,0]
         
         a = tau / (tau + self.DelayTime)
-        for value in result:
-            value = a * (self.accStatus[i] + self.gyroStatus[i] * self.DelayTime) 
-            + (1 - a) * self.current_angle
+        for i in range(3):
+            result[i] = a * (self.accStatus[i] + self.gyroStatus[i] * self.DelayTime) 
+            + (1 - a) * self.current_angle[i]
 
         return result
 
