@@ -1,6 +1,7 @@
 from juperBluetooth import juperBluetooth
 from juperMotors import juperMotors
 from juperSensor import juperSensor
+from juperPID import juperPID
 import datetime
 import time
 import thread
@@ -46,29 +47,36 @@ if __name__ == "__main__":
     # init values
     timeStep = 0.1
     motors_pin_array = [17, 18, 22, 23]
+    motors_correction = [0, 0, 0, 0]
 
     # init sensor
     sensors = juperSensor()
     sensors.start()
     # init motors
     motors = juperMotors(motors_pin_array)
+    pid = juperPID()
 
     # init Bluetooth
-    comm = juperBluetooth()
-    comm.start()
+    bluetooth = juperBluetooth()
+    bluetooth.start()
     
-    while comm.isRunning:
-        doBluetoothCommand(comm)
+    while bluetooth.isRunning:
+        doBluetoothCommand(bluetooth)
 
         # Get sensor value
         sensorStatus = sensors.getCurrentAngleStatus()
 
         # Calculate PID
+        motors_correction = pid.gePID(sensorStatus, timeStep)
+
         # Update Motors
+        for i in range(len(motors.motors)):
+            motors.setMotorW(i, motors_correction[i])
+
         # Send Motors Status
-        if (comm.isConnected):
-            comm.sendMotorStatus(motors.getCurrentStatus())
-            comm.sendSensorStatus(sensorStatus)
+        if (bluetooth.isConnected):
+            bluetooth.sendMotorStatus(motors.getCurrentStatus())
+            bluetooth.sendSensorStatus(sensorStatus)
         time.sleep(timeStep)
 
     # Check motor if Drone is still flying

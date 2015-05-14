@@ -5,7 +5,7 @@ class juperPID(object):
 		x_PID = pid()
     	y_PID = pid()
 
-    def getPID(self, senserStatus):
+    def getPID(self, senserStatus, timeStep):
     	result = [0,0,0,0]
     	x_Correction = x_PID.calc(target_angle[0], sensorStatus[0], timeStep)
         y_Correction = y_PID.calc(target_angle[1], sensorStatus[1], timeStep)
