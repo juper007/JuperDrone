@@ -35,12 +35,13 @@ class juperSensor(threading.Thread):
             _Q = numpy.eye(1) * 0.001,
             _R = numpy.eye(1) * 0.01            
             )
+        self.isRunning = True;
 
         self.GyroSensor.Init()
         self.GyroSensor.Calibrate()
 
     def run(self):
-        while True: 
+        while self.isRunning: 
             gyro_dxyz = self.GyroSensor.Get_CalOut_Value()
             self.gyroStatus = self.getAngleGyro(gyro_dxyz)
             self.accStatus = self.getAngleAcc(self.AccSensor.read())
@@ -48,6 +49,10 @@ class juperSensor(threading.Thread):
             self.current_angle = self.getAngleCombine()
 
             time.sleep(self.DelayTime)
+
+    def stop():
+        self.isRunning = False
+
 
     def getAngleGyro(self, gyro_dxyz):
         result = self.gyroStatus

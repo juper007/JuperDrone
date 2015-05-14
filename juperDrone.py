@@ -83,5 +83,6 @@ if __name__ == "__main__":
     #   if yes - do landing
 
     # End
+    sensors.stop();
     log ("End")
 
