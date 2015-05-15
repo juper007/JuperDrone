@@ -88,7 +88,10 @@ class juperBluetooth(threading.Thread):
         data = "21" + str(len(sensorStatus))
         for val in sensorStatus:
             val = int(round(val, 2) * 100)
-            data = data + "{:0>5d}".format(val)
+            sign = "0"
+            if val < 0:
+                sign = "1"
+            data = data + "{0}{:0>5d}".format(sign,val)
         self.log(data)
         self.socket.send(data)
 
