@@ -91,7 +91,7 @@ class juperBluetooth(threading.Thread):
             sign = "0"
             if val < 0:
                 sign = "1"
-            data = data + "{0}{:0>5d}".format(sign,val)
+            data = data + "{0}{1:0>5d}".format(sign,val)
         self.log(data)
         self.socket.send(data)
 
