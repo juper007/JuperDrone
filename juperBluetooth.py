@@ -80,7 +80,7 @@ class juperBluetooth(threading.Thread):
     def sendMotorStatus(self, motorStatus):
         data = "20" + str(len(motorStatus))
         for val in motorStatus:
-            var = int(round(val, 1) * 10)
+            val = int(round(val, 1) * 10)
             data = data + "{:0>3d}".format(val)
         self.socket.send(data)
 
