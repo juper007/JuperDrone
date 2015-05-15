@@ -32,7 +32,7 @@ import logging
 
 class pid(object):
 
-    def __init__(self, kp=0, ki=0, kd=0, maxCorr=20):
+    def __init__(self, kp=0.045, ki=0, kd=0, maxCorr=15):
 
         self.logger = logging.getLogger('myQ.pid')
         self.kp = kp

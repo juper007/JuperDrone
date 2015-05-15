@@ -1,10 +1,14 @@
 from pid import pid
+import datetime
 
 class juperPID(object): 
     def __init__(self):
         self.x_PID = pid()
         self.y_PID = pid()
         self.target_angle = [0,0]
+
+    def log(self, message):
+        print ("[PID] {0} : {1}".format(datetime.datetime.now(), message))
 
     def getPID(self, senserStatus, timeStep):
         result = [0,0,0,0]

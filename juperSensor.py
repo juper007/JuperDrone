@@ -50,14 +50,13 @@ class juperSensor(threading.Thread):
 
             time.sleep(self.DelayTime)
 
-    def stop():
+    def stop(self):
         self.isRunning = False
-
 
     def getAngleGyro(self, gyro_dxyz):
         result = self.gyroStatus
         for i in range(3):
-            result[i] += gyro_dxyz[i] * self.DelayTime 
+            result[i] = gyro_dxyz[i] * self.DelayTime 
         return result
 
     def getAngleAcc(self, acc):
@@ -76,8 +75,7 @@ class juperSensor(threading.Thread):
         
         a = tau / (tau + self.DelayTime)
         for i in range(3):
-            result[i] = a * (self.accStatus[i] + self.gyroStatus[i] * self.DelayTime) 
-            + (1 - a) * self.current_angle[i]
+            result[i] = a * (self.accStatus[i] + self.gyroStatus[i] * self.DelayTime) + (1 - a) * self.current_angle[i]
 
         return result
 

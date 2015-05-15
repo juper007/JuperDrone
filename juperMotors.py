@@ -11,7 +11,7 @@ class juperMotors(object):
             m = motor(pin)
             m.start()
             m.setW(0)
-            self.motors.append(motor(pin))
+            self.motors.append(m)
 
     def log(self, message):
         print ("[Motor] {0} : {1}".format(datetime.datetime.now(), message))

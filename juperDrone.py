@@ -61,22 +61,21 @@ if __name__ == "__main__":
     bluetooth.start()
     
     while bluetooth.isRunning:
-        doBluetoothCommand(bluetooth)
-
-        # Get sensor value
-        sensorStatus = sensors.getCurrentAngleStatus()
-
-        # Calculate PID
-        motors_correction = pid.getPID(sensorStatus, timeStep)
-
-        # Update Motors
-        for i in range(len(motors.motors)):
-            motors.setMotorW(i, motors_correction[i])
-
-        # Send Motors Status
         if (bluetooth.isConnected):
+            # Get sensor value
+            sensorStatus = sensors.getCurrentAngleStatus()
+
+            # Calculate PID
+            motors_correction = pid.getPID(sensorStatus, timeStep)
+
+            # Update Motors
+            for i in range(4):
+                motors.setMotorW(i, motors_correction[i])
+           
             bluetooth.sendMotorStatus(motors.getCurrentStatus())
             bluetooth.sendSensorStatus(sensorStatus)
+
+            doBluetoothCommand(bluetooth)
         time.sleep(timeStep)
 
     # Check motor if Drone is still flying

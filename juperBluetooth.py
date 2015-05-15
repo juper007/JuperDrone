@@ -47,7 +47,7 @@ class juperBluetooth(threading.Thread):
                 self.isRunning = self.communicationHandle()
             except Exception as inst:
                 self.log(type(inst))
-                self.socket.close()
+        self.socket.close()
 
      ###########################################################
      # Receive Protocol
@@ -93,7 +93,6 @@ class juperBluetooth(threading.Thread):
                 sign = "1"
                 val = val * -1
             data = data + "{0}{1:0>5d}".format(sign,val)
-        self.log(data)
         self.socket.send(data)
 
 
