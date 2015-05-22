@@ -27,14 +27,11 @@
 #2014.08.03
 #removed stepTime calculation.This info is taken now as imput
 #this is to simplify code and avoid disallineaments on timing
-import logging
-
 
 class pid(object):
 
-    def __init__(self, kp=0.045, ki=0, kd=0, maxCorr=15):
+    def __init__(self, kp=0, ki=0, kd=0, maxCorr=15):
 
-        self.logger = logging.getLogger('myQ.pid')
         self.kp = kp
         self.ki = ki
         self.kd = kd
@@ -48,12 +45,11 @@ class pid(object):
         self.maxCorr = maxCorr
         self.previousError = 0
 
-    def set(self, kp, ki, kd, maxCorr=20):
+    def set(self, kp, ki, kd, maxCorr=15):
         self.kp = kp
         self.ki = ki
         self.kd = kd
-        self.maxCorr = maxCorr
-        self.logger.debug('kp = ' + str(kp) + ' ki = ' + str(ki) + ' kd = ' + str(ki))
+        self.maxCorr = maxCorr    
 
     def calc(self, target, feedback, stepTime):
 

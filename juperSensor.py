@@ -1,6 +1,7 @@
 from L3GD20 import L3GD20
 from LSM303 import Adafruit_LSM303
 from kalmanfilter import KalmanFilterLinear
+from lowpassfilter import lowpassfilter
 import time
 import math
 import numpy
@@ -35,6 +36,7 @@ class juperSensor(threading.Thread):
             _Q = numpy.eye(1) * 0.001,
             _R = numpy.eye(1) * 0.01            
             )
+        self.lpf = lowpassfilter(0.025)
         self.isRunning = True;
 
         self.GyroSensor.Init()
@@ -70,12 +72,15 @@ class juperSensor(threading.Thread):
         return result
 
     def getAngleCombine(self):
-        tau = 0.003
+        tau = 0.1
         result = [0,0,0]
         
         a = tau / (tau + self.DelayTime)
         for i in range(3):
             result[i] = a * (self.accStatus[i] + self.gyroStatus[i] * self.DelayTime) + (1 - a) * self.current_angle[i]
+
+        result[0] = 0
+        result[2] = 0
 
         return result
 

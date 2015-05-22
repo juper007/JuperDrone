@@ -20,6 +20,11 @@ class juperMotors(object):
         current_value = self.motors[index].getSetValue()
         self.motors[index].setW(current_value + offset)
 
+    def stopMotors(self):
+        for i in range(self.motorCount):
+            self.setMotorW(i, 0)
+        self.log("Stop Motors")    
+
     def moveUp(self, offset):        
         for i in range(self.motorCount):
             self.setMotorW(i, offset)

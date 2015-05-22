@@ -36,6 +36,9 @@ def doBluetoothCommand(comm):
         elif (command[0] == "06"):
             # Turn CCW
             log(command)
+        elif (command[0] == "99"):
+            # Stop Motors
+            motors.stopMotors()
 
         else:
             log(command)
@@ -67,9 +70,10 @@ if __name__ == "__main__":
 
             # Calculate PID
             motors_correction = pid.getPID(sensorStatus, timeStep)
-
+            
             # Update Motors
             for i in range(4):
+                #i=i
                 motors.setMotorW(i, motors_correction[i])
            
             bluetooth.sendMotorStatus(motors.getCurrentStatus())
@@ -82,6 +86,7 @@ if __name__ == "__main__":
     #   if yes - do landing
 
     # End
-    sensors.stop();
+    motors.stopMotors()
+    sensors.stop()
     log ("End")
 
